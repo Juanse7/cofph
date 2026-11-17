@@ -4,8 +4,8 @@ import { siguienteIdPaciente } from '../utils/pacientes.js';
 
 // Almacén en memoria para la demo. Se guarda una copia en localStorage (si está disponible)
 // para que los datos sobrevivan a una recarga de la página.
-// v2: cédulas e historiales clínicos de ejemplo con el nuevo formato. Cambiar la clave recarga los datos de ejemplo.
-const CLAVE_STORAGE = 'cofph-demo-datos-v2';
+// v3: citas de ejemplo para los próximos 20 días. Cambiar la clave recarga los datos de ejemplo.
+const CLAVE_STORAGE = 'cofph-demo-datos-v3';
 
 function cargarDatos() {
   try {

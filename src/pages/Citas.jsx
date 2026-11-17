@@ -19,7 +19,12 @@ const siNo = (valor) => (valor ? 'Sí' : 'No');
 const COLUMNAS = [
   { etiqueta: 'ID paciente', valor: (c, p) => p?.idPaciente ?? c.idPaciente, clase: 'celda-numero' },
   { etiqueta: 'Estado del paciente', valor: (c) => c.statusIdPaciente },
-  { etiqueta: 'Llegada', valor: (c) => formatearFechaHora(c.llegada) },
+  {
+    etiqueta: 'Llegada',
+    valor: (c) => formatearFechaHora(c.llegada),
+    // Llegada posterior a la hora de la cita: se marca en rojo claro.
+    claseCelda: (c) => (c.llegada > c.hora ? 'celda-llegada-tarde' : ''),
+  },
   { etiqueta: 'Hora', valor: (c) => formatearFechaHora(c.hora) },
   { etiqueta: 'Nombres', valor: (c, p) => p?.nombres },
   { etiqueta: 'Apellido paterno', valor: (c, p) => p?.apellidoPaterno },
@@ -101,7 +106,7 @@ export default function Citas() {
           <h2>
             Citas del día <span className="insignia">{citasDelDia.length}</span>
           </h2>
-          <span className="ayuda">Haga clic en una fila para editar la cita. Desplácese para ver más columnas.</span>
+          <span className="ayuda">Haga clic en una fila para editar la cita. Las llegadas posteriores a la hora se marcan en rojo.</span>
         </div>
 
         <div className="hoja hoja--citas">
@@ -124,7 +129,7 @@ export default function Citas() {
                 return (
                   <tr key={cita.idCita} onClick={() => setModal({ tipo: 'editar', cita })} title="Editar cita">
                     {COLUMNAS.map((col) => (
-                      <td key={col.etiqueta} className={col.clase || ''}>
+                      <td key={col.etiqueta} className={[col.clase, col.claseCelda?.(cita, paciente)].filter(Boolean).join(' ')}>
                         {col.valor(cita, paciente) || <span className="celda-tenue">—</span>}
                       </td>
                     ))}

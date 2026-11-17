@@ -43,4 +43,4 @@ Es un inicio de sesión falso para la demo: las credenciales están en el códig
 - `src/pages/`: una página por ruta.
 - `src/estilos/`: estilos globales, componentes y páginas.
 
-Para reiniciar los datos de ejemplo, borre la clave `cofph-demo-datos-v2` del `localStorage` del navegador.
+Para reiniciar los datos de ejemplo, borre la clave `cofph-demo-datos-v3` del `localStorage` del navegador.

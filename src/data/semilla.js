@@ -1,10 +1,90 @@
 // Datos de demostración. Se cargan cuando no hay datos guardados en el navegador.
 import { hoyISO, combinarFechaHora, fechaDesdeDate } from '../utils/fechas.js';
+import { OPCIONES_CONFIRMACION, OPCIONES_TIPO_CONSULTA } from './opciones.js';
 
 function sumarDias(iso, dias) {
   const [y, m, d] = iso.split('-').map(Number);
   const fecha = new Date(y, m - 1, d + dias);
   return fechaDesdeDate(fecha);
+}
+
+// Citas de ejemplo para los próximos 20 días, empezando hoy.
+// Cada día tiene 3 o 6 citas (8 no se puede dividir en tercios exactos).
+// Un tercio de las citas tiene la llegada después de la hora (de 5 a 60 minutos); el resto llega antes.
+const TOTALES_POR_DIA = [6, 3, 3, 6, 6, 3, 6, 3, 3, 6, 6, 6, 3, 3, 6, 6, 3, 3, 6, 3];
+const HORAS_CANDIDATAS = ['08:00', '08:45', '13:00', '13:45', '14:30', '15:15', '16:00', '16:45', '17:30'];
+const MINUTOS_TARDE = [5, 15, 25, 35, 45, 55, 10, 20, 30, 40, 50, 60];
+const MINUTOS_ANTES = [10, 20, 30, 45, 60, 15];
+const EXAMENES = [
+  'Refracción completa',
+  'Control de presión intraocular',
+  'Fondo de ojo',
+  'Campo visual',
+  'Adaptación de lentes de contacto',
+  '',
+];
+const PERSONAS_QUE_TOMAN_CITA = ['Recepción', 'Luisa', 'Marta', 'Recepción'];
+const PLANES = ['Lentes progresivos', 'Seguimiento mensual', '', 'Lentes de contacto blandos', 'Valoración de cirugía refractiva'];
+const RX = ['Sí', '', 'No'];
+
+function aMinutos(hhmm) {
+  const [horas, minutos] = hhmm.split(':').map(Number);
+  return horas * 60 + minutos;
+}
+
+function deMinutos(total) {
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+}
+
+function generarCitasDeEjemplo(hoy, pacientes, citasBase) {
+  const generadas = [];
+  let consecutivo = citasBase.length + 1;
+
+  TOTALES_POR_DIA.forEach((total, dia) => {
+    const fecha = sumarDias(hoy, dia);
+    const existentes = citasBase.filter((c) => c.hora.slice(0, 10) === fecha);
+    const existentesTarde = existentes.filter((c) => c.llegada > c.hora).length;
+
+    const nuevas = total - existentes.length;
+    const tardesNuevas = total / 3 - existentesTarde;
+    const rotacion = dia % HORAS_CANDIDATAS.length;
+    const horas = [...HORAS_CANDIDATAS.slice(rotacion), ...HORAS_CANDIDATAS.slice(0, rotacion)];
+
+    // Posiciones repartidas de las llegadas tardías entre las citas nuevas del día.
+    const posicionesTarde = new Set(
+      Array.from({ length: tardesNuevas }, (_, k) => Math.floor(((k + 0.5) * nuevas) / tardesNuevas)),
+    );
+
+    for (let j = 0; j < nuevas; j += 1) {
+      const paciente = pacientes[(dia * 2 + j) % pacientes.length];
+      const indice = dia + j;
+      const horaCita = horas[j];
+      const desfase = posicionesTarde.has(j)
+        ? MINUTOS_TARDE[indice % MINUTOS_TARDE.length]
+        : -MINUTOS_ANTES[indice % MINUTOS_ANTES.length];
+
+      generadas.push({
+        idCita: `C-${String(consecutivo).padStart(4, '0')}`,
+        idPaciente: paciente.idPaciente,
+        statusIdPaciente: paciente.statusIdPaciente,
+        llegada: combinarFechaHora(fecha, deMinutos(aMinutos(horaCita) + desfase)),
+        hora: combinarFechaHora(fecha, horaCita),
+        tipoDeConsulta: OPCIONES_TIPO_CONSULTA[indice % OPCIONES_TIPO_CONSULTA.length],
+        x: indice % 4 === 0,
+        examen: EXAMENES[indice % EXAMENES.length],
+        qr: indice % 2 === 0,
+        personaQueTomoLaCita: PERSONAS_QUE_TOMAN_CITA[indice % PERSONAS_QUE_TOMAN_CITA.length],
+        confirmacion: OPCIONES_CONFIRMACION[indice % OPCIONES_CONFIRMACION.length],
+        telefono: paciente.telefono,
+        fechaEnQueSeTomoLaCita: sumarDias(fecha, -((indice % 10) + 1)),
+        plan: PLANES[indice % PLANES.length],
+        rx: RX[indice % RX.length],
+      });
+      consecutivo += 1;
+    }
+  });
+
+  return generadas;
 }
 
 export function crearDatosSemilla() {
@@ -221,5 +301,7 @@ export function crearDatosSemilla() {
     },
   ];
 
-  return { pacientes, citas, cartillas: {}, seguimientos, historial };
+  const citasCompletas = [...citas, ...generarCitasDeEjemplo(hoy, pacientes, citas)];
+
+  return { pacientes, citas: citasCompletas, cartillas: {}, seguimientos, historial };
 }

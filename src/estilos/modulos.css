@@ -1,0 +1,607 @@
+/* ---------- Casillas ---------- */
+
+.casilla {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+
+.casilla input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--primario);
+}
+
+/* ---------- Calendario de citas ---------- */
+
+.citas-cabecera {
+  align-items: flex-end;
+}
+
+.citas-controles {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.citas-seccion {
+  padding: 18px 20px 20px;
+  min-width: 0;
+}
+
+.citas-seccion-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 14px;
+}
+
+.citas-seccion-cabecera h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+}
+
+.hoja--citas {
+  max-height: calc(100vh - 340px);
+  min-height: 220px;
+}
+
+.hoja--citas tbody tr {
+  transition: background 0.1s ease;
+}
+
+.hoja--citas tbody tr:hover td {
+  background: #f0fdfa;
+}
+
+.hoja--citas td {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hoja--citas th:nth-child(-n + 2),
+.hoja--citas td:nth-child(-n + 2) {
+  min-width: 110px;
+}
+
+/* ---------- Formulario de cita ---------- */
+
+.form-cita {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--superficie-2);
+}
+
+.form-seccion h3 {
+  font-size: 15px;
+  color: var(--primario-oscuro);
+}
+
+.form-seccion-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px 16px;
+}
+
+.form-casillas {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.form-enlace {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-pie {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.lookup-barra {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.lookup-barra .entrada {
+  flex: 1 1 320px;
+}
+
+.lookup-resumen {
+  margin-bottom: 10px;
+}
+
+.hoja--lookup {
+  max-height: 52vh;
+}
+
+/* ---------- Historial: paneles ---------- */
+
+.historial-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.historial-izquierda {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 20px;
+}
+
+.historial-derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.panel-tarjeta {
+  overflow: hidden;
+}
+
+.panel-tarjeta-cabecera {
+  padding: 13px 18px;
+  background: linear-gradient(90deg, #e0f2f7, #f0fdfa);
+  border-bottom: 1px solid var(--borde);
+}
+
+.panel-tarjeta-cabecera h3 {
+  font-size: 15px;
+  color: var(--primario-oscuro);
+}
+
+.panel-tarjeta-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 18px 18px;
+}
+
+.panel-acciones {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.panel-campos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel-campos .linea {
+  font-family: var(--fuente);
+  font-size: 14px;
+}
+
+.resumen-lista {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+  margin: 0;
+}
+
+.resumen-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.resumen-item--completo {
+  grid-column: 1 / -1;
+}
+
+.resumen-item dt {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-suave);
+}
+
+.resumen-item dd {
+  margin: 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+/* Formulario de actividad */
+
+.actividad-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: var(--fuente);
+}
+
+.actividad-form .linea {
+  font-family: var(--fuente);
+  font-size: 14px;
+}
+
+.archivos-bloque {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px dashed var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--superficie-2);
+}
+
+.archivos-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.archivos-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.archivos-lista li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.archivo-nombre {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Editor de dibujo */
+
+.editor-dibujo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: var(--fuente);
+}
+
+.lienzo-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--superficie-2);
+}
+
+.barra-control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 200px;
+}
+
+.barra-etiqueta {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-suave);
+}
+
+.selector-color {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.selector-color-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+  padding: 9px 12px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--superficie);
+  font-weight: 500;
+}
+
+.selector-color-boton:hover {
+  border-color: var(--acento);
+}
+
+.muestra-color {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(15, 23, 42, 0.2);
+}
+
+.selector-color-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(6, 28px);
+  gap: 8px;
+  padding: 10px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  box-shadow: var(--sombra-alta);
+}
+
+.muestra-opcion {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(15, 23, 42, 0.2);
+}
+
+.muestra-opcion--activa {
+  box-shadow: 0 0 0 2px var(--superficie), 0 0 0 4px var(--primario);
+}
+
+.lienzo-acciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.lienzo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 800 / 440;
+  background: #ffffff;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.registro-imagen {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #ffffff;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+}
+
+/* Filtros del panel derecho */
+
+.filtros-historial {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.filtros-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.filtros-cabecera h3 {
+  font-size: 16px;
+}
+
+.filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px 16px;
+  align-items: end;
+}
+
+.filtro-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* Registros: un div por cada guardado */
+
+.lista-registros {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.registro {
+  padding: 16px 18px;
+  border-left: 4px solid var(--primario);
+}
+
+.registro--estado {
+  border-left-color: #7c3aed;
+}
+
+.registro--facturacion {
+  border-left-color: #b45309;
+}
+
+.registro--papelRecetaLentes,
+.registro--recetaMedicinas {
+  border-left-color: var(--acento);
+}
+
+.registro--ordenExamenes,
+.registro--resultadosExamenes,
+.registro--reportesExamenes {
+  border-left-color: #2563eb;
+}
+
+.registro-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.registro-tipo {
+  font-weight: 700;
+  color: var(--texto);
+}
+
+.registro-fecha {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primario-oscuro);
+  background: var(--primario-suave);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.registro-datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px 18px;
+  margin: 0;
+}
+
+.registro-dato {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.registro-dato--area {
+  grid-column: 1 / -1;
+}
+
+.registro-dato dt {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-suave);
+}
+
+.registro-dato dd {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.registro-archivos {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--borde);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.registro-archivos-titulo {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-suave);
+}
+
+.registro-archivos ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.registro-archivos li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.registro-archivos small {
+  color: var(--texto-tenue);
+}
+
+@media (max-width: 1100px) {
+  .historial-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .historial-izquierda {
+    position: static;
+  }
+}
+
+@media (max-width: 720px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resumen-lista {
+    grid-template-columns: 1fr;
+  }
+
+  .citas-controles {
+    width: 100%;
+  }
+
+  .citas-cabecera .cal-trigger {
+    min-width: 0;
+  }
+}

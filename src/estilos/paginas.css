@@ -1,0 +1,615 @@
+/* ---------- Utilidades ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.capitalizar {
+  text-transform: capitalize;
+}
+
+.texto-error {
+  color: var(--peligro);
+}
+
+.pagina--ancha {
+  max-width: 1500px;
+}
+
+.acciones-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn--pequeno {
+  padding: 6px 10px;
+  font-size: 13px;
+  position: relative;
+}
+
+.btn {
+  position: relative;
+}
+
+/* ---------- Inicio ---------- */
+
+.inicio {
+  gap: 28px;
+}
+
+.inicio-bienvenida {
+  padding: 36px 40px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #0b3b4a 0%, #0d9488 100%);
+  color: #ffffff;
+  box-shadow: var(--sombra-alta);
+}
+
+.inicio-bienvenida h1 {
+  font-size: 32px;
+  margin: 6px 0 10px;
+}
+
+.inicio-bienvenida p {
+  max-width: 640px;
+  opacity: 0.92;
+}
+
+.inicio-fecha {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.inicio-opciones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.opcion-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 26px;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.opcion-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-alta);
+  border-color: #99d6e0;
+}
+
+.opcion-card h2 {
+  font-size: 20px;
+}
+
+.opcion-card p {
+  margin-top: 4px;
+  color: var(--texto-suave);
+}
+
+.opcion-icono {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+}
+
+.opcion-icono--pacientes {
+  background: #e0f2f7;
+  color: #0e7490;
+}
+
+.opcion-icono--citas {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.opcion-cifra {
+  margin-top: auto;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primario);
+}
+
+/* ---------- Pacientes ---------- */
+
+.barra-busqueda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+}
+
+.barra-busqueda-campo {
+  flex: 1 1 380px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--superficie);
+  color: var(--texto-tenue);
+}
+
+.barra-busqueda-campo:focus-within {
+  border-color: var(--acento);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.18);
+}
+
+.barra-busqueda-input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: var(--texto);
+}
+
+.resumen-resultados {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--texto-suave);
+}
+
+.lista-pacientes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fila-paciente {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  padding: 16px 18px;
+}
+
+.fila-paciente-datos {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px 18px;
+}
+
+.fila-paciente-acciones {
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+  border-left: 1px solid var(--borde);
+}
+
+.dato {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dato-etiqueta {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-suave);
+}
+
+.dato-valor {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.id-paciente {
+  font-size: 18px;
+  color: var(--primario);
+}
+
+.sin-dato {
+  color: var(--texto-tenue);
+  font-style: italic;
+}
+
+/* ---------- Hoja de papel (Datos Personales y Cartilla) ---------- */
+
+.hoja-papel {
+  position: relative;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 40px 48px 32px;
+  background: #fffdf7;
+  color: #111111;
+  font-family: var(--fuente-papel);
+  border: 1px solid #d9d4c3;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 10px 30px rgba(15, 23, 42, 0.08);
+  background-image: linear-gradient(to bottom, rgba(14, 116, 144, 0.035), transparent 160px);
+}
+
+.papel-encabezado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.papel-marca {
+  font-family: var(--fuente);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #0e7490;
+}
+
+.papel-titulo {
+  font-size: 26px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.papel-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.papel-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.papel-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 26px;
+}
+
+.papel-pie {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px dashed #d9d4c3;
+  font-family: var(--fuente);
+}
+
+.papel-mensaje {
+  margin-right: auto;
+  font-size: 14px;
+  color: var(--exito);
+}
+
+/* Línea de formulario impreso: etiqueta + subrayado */
+
+.linea {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 4px 8px;
+  min-width: 0;
+  font-size: 17px;
+  line-height: 1.2;
+  flex: 1 1 240px;
+}
+
+.linea--completo {
+  flex: 1 1 100%;
+}
+
+.linea--medio {
+  flex: 1 1 260px;
+}
+
+.linea--corto {
+  flex: 0 1 200px;
+}
+
+.linea--auto {
+  flex: 1 1 240px;
+}
+
+.linea-etiqueta {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  color: #111111;
+}
+
+.hoja-papel--datos .linea-etiqueta {
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.linea-input {
+  flex: 1 1 150px;
+  min-width: 150px;
+  width: 100%;
+  padding: 2px 6px 1px;
+  border: none;
+  border-bottom: 1px solid #222222;
+  border-radius: 0;
+  background: transparent;
+  font: inherit;
+  color: #111111;
+}
+
+.linea-input:focus {
+  outline: none;
+  border-bottom: 2px solid var(--acento);
+  background: rgba(13, 148, 136, 0.06);
+}
+
+.linea-input[readonly],
+.linea--lectura .linea-input {
+  color: #3b3b3b;
+  border-bottom-style: dotted;
+  border-bottom-color: #888888;
+}
+
+.linea-input:disabled {
+  opacity: 1;
+}
+
+select.linea-input {
+  padding-left: 2px;
+  cursor: pointer;
+}
+
+.linea-check {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primario);
+}
+
+.linea-ayuda {
+  font-size: 12px;
+  color: var(--texto-tenue);
+}
+
+.linea--area {
+  align-items: flex-start;
+}
+
+.linea-textarea {
+  line-height: 28px;
+  padding: 0 6px;
+  resize: vertical;
+  min-height: 56px;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 27px,
+    #555555 27px,
+    #555555 28px
+  );
+  background-attachment: local;
+}
+
+.linea-textarea:focus {
+  background-color: rgba(13, 148, 136, 0.05);
+}
+
+.linea-textarea[readonly] {
+  border-bottom: none;
+}
+
+.seguro-linea {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.seguro-etiqueta {
+  color: #111111;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+}
+
+/* Hoja de datos personales: encabezado con metadatos en líneas */
+
+.hoja-papel--datos .papel-titulo {
+  font-size: 22px;
+}
+
+.hoja-papel--datos .papel-meta .linea {
+  flex: 1 1 200px;
+}
+
+.hoja-papel--datos .linea-input {
+  font-size: 16px;
+}
+
+/* ---------- Cartilla ---------- */
+
+.hoja-papel--cartilla {
+  max-width: 900px;
+}
+
+.hoja-papel--cartilla .linea {
+  font-size: 16px;
+  flex-wrap: nowrap;
+}
+
+.hoja-papel--cartilla .linea-input {
+  min-width: 60px;
+}
+
+.papel-encabezado--cartilla {
+  margin-bottom: 14px;
+}
+
+.cartilla-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 2px solid #111111;
+}
+
+.cartilla-seccion:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.cartilla-titulo-seccion {
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cartilla-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 22px;
+}
+
+.cartilla-fila > .linea {
+  flex: 1 1 240px;
+}
+
+.cartilla-fila > .linea:only-child,
+.cartilla-fila > .linea--completo {
+  flex: 1 1 100%;
+}
+
+.cartilla-fila > .linea--corto {
+  flex: 0 1 220px;
+}
+
+.cartilla-subtitulo {
+  flex: 0 0 auto;
+  font-weight: 700;
+  white-space: nowrap;
+  padding-bottom: 3px;
+}
+
+.cartilla-fila > .cartilla-subtitulo + .linea {
+  flex: 1 1 200px;
+}
+
+/* ---------- Seguimientos ---------- */
+
+.seguimientos {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 28px;
+  max-width: 900px;
+}
+
+.seguimientos-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.seguimientos-cabecera h2 {
+  font-size: 20px;
+}
+
+.seguimiento {
+  padding: 18px 20px;
+}
+
+.seguimiento-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.seguimiento-fecha {
+  font-weight: 600;
+  color: var(--primario-oscuro);
+}
+
+.seguimiento-texto {
+  margin-top: 8px;
+  white-space: pre-wrap;
+  color: var(--texto);
+}
+
+.seguimiento--nuevo {
+  border-style: dashed;
+  border-color: var(--borde-fuerte);
+  background: var(--superficie-2);
+  box-shadow: none;
+}
+
+.seguimiento--nuevo h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.seguimiento-campos {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 14px;
+}
+
+.seguimiento-pie {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
+@media (max-width: 640px) {
+  .hoja-papel {
+    padding: 26px 20px 22px;
+  }
+
+  .seguimiento-campos {
+    grid-template-columns: 1fr;
+  }
+
+  .fila-paciente {
+    flex-direction: column;
+  }
+
+  .fila-paciente-acciones {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid var(--borde);
+    padding-top: 12px;
+  }
+}

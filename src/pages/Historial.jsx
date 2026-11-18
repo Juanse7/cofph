@@ -38,7 +38,7 @@ export default function Historial() {
   }
 
   return (
-    <div className="pagina pagina--ancha">
+    <div className="pagina pagina--ancha pagina--historial">
       <header className="pagina-cabecera">
         <div className="pagina-titulo">
           <Link to="/Pacientes" className="migaja">← Pacientes</Link>

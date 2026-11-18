@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useAlmacen } from '../../context/AlmacenContext.jsx';
+import Modal from '../Modal.jsx';
 import LookupPacientes from './LookupPacientes.jsx';
+import PapelDatosPersonales from '../datos/PapelDatosPersonales.jsx';
 import {
   OPCIONES_CONFIRMACION,
   OPCIONES_STATUS_PACIENTE,
@@ -9,10 +10,11 @@ import {
 } from '../../data/opciones.js';
 import { combinarFechaHora, formatearFecha, hoyISO, parteHora } from '../../utils/fechas.js';
 import { apellidosPaternoPrimero } from '../../utils/pacientes.js';
+import { estaActiva } from '../../utils/citas.js';
 
-function Campo({ etiqueta, children, completo = false, ayuda }) {
+function Campo({ etiqueta, children, ayuda }) {
   return (
-    <label className={`campo ${completo ? 'campo--completo' : ''}`}>
+    <label className="campo">
       <span className="campo-etiqueta">{etiqueta}</span>
       {children}
       {ayuda && <span className="ayuda">{ayuda}</span>}
@@ -20,9 +22,9 @@ function Campo({ etiqueta, children, completo = false, ayuda }) {
   );
 }
 
-function Seleccion({ valor, onChange, opciones, disabled }) {
+function Seleccion({ valor, onChange, opciones }) {
   return (
-    <select className="entrada" value={valor} disabled={disabled} onChange={(e) => onChange(e.target.value)}>
+    <select className="entrada" value={valor} onChange={(e) => onChange(e.target.value)}>
       <option value="">- Seleccionar -</option>
       {opciones.map((op) => (
         <option key={op} value={op}>
@@ -42,50 +44,74 @@ function Casilla({ etiqueta, valor, onChange }) {
   );
 }
 
+// Interruptor de la cita: "Activa" cuando está encendido, "Cancelada" cuando se apaga.
+function InterruptorActiva({ activa, onChange }) {
+  return (
+    <div className="interruptor-fila">
+      <span className="campo-etiqueta">Estado de la cita</span>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={activa}
+        className={`interruptor ${activa ? 'interruptor--on' : ''}`}
+        onClick={() => onChange(!activa)}
+      >
+        <span className="interruptor-pista" aria-hidden="true">
+          <span className="interruptor-bola" />
+        </span>
+        <span className="interruptor-texto">{activa ? 'Activa' : 'Cancelada'}</span>
+      </button>
+    </div>
+  );
+}
+
 // Formulario compartido de cita.
-// modo 'editar': formCitas (campos de paciente bloqueados, se reciben desde la búsqueda).
-// modo 'nueva': formCitasNew (incluye lookupFormCitas para elegir al paciente).
+// modo 'editar': formCitas. Los datos del paciente vienen del registro del paciente y son de solo lectura.
+// modo 'nueva': formCitasNew. Incluye lookupFormCitas; los datos del paciente aparecen al elegirlo.
+// El "Estado del paciente" se guarda en el registro oficial del paciente.
 export default function FormularioCita({ modo, cita, fechaPrincipal, onGuardado, onCerrar }) {
   const esNueva = modo === 'nueva';
-  const { obtenerPaciente, crearCita, actualizarCita } = useAlmacen();
+  const { obtenerPaciente, crearCita, actualizarCita, actualizarPaciente } = useAlmacen();
 
-  const [form, setForm] = useState(() =>
-    esNueva
-      ? {
-          idPaciente: '',
-          statusIdPaciente: '',
-          llegadaHora: '09:00',
-          hora: combinarFechaHora(fechaPrincipal, '09:00'),
-          tipoDeConsulta: '',
-          x: false,
-          examen: '',
-          qr: false,
-          personaQueTomoLaCita: '',
-          confirmacion: 'Pendiente',
-          telefono: '',
-          fechaEnQueSeTomoLaCita: hoyISO(),
-          plan: '',
-          rx: '',
-        }
-      : {
-          idPaciente: cita.idPaciente,
-          statusIdPaciente: cita.statusIdPaciente || '',
-          llegadaHora: parteHora(cita.llegada),
-          hora: cita.hora || '',
-          tipoDeConsulta: cita.tipoDeConsulta || '',
-          x: Boolean(cita.x),
-          examen: cita.examen || '',
-          qr: Boolean(cita.qr),
-          personaQueTomoLaCita: cita.personaQueTomoLaCita || '',
-          confirmacion: cita.confirmacion || '',
-          telefono: cita.telefono || '',
-          fechaEnQueSeTomoLaCita: (cita.fechaEnQueSeTomoLaCita || '').slice(0, 10),
-          plan: cita.plan || '',
-          rx: cita.rx || '',
-        },
-  );
+  const [form, setForm] = useState(() => {
+    if (esNueva) {
+      return {
+        idPaciente: '',
+        statusIdPaciente: '',
+        llegadaHora: '09:00',
+        hora: combinarFechaHora(fechaPrincipal, '09:00'),
+        tipoDeConsulta: '',
+        x: false,
+        examen: '',
+        qr: false,
+        personaQueTomoLaCita: '',
+        confirmacion: 'Pendiente',
+        fechaEnQueSeTomoLaCita: hoyISO(),
+        plan: '',
+        rx: '',
+        activa: true,
+      };
+    }
+    return {
+      idPaciente: cita.idPaciente,
+      statusIdPaciente: obtenerPaciente(cita.idPaciente)?.statusIdPaciente || '',
+      llegadaHora: parteHora(cita.llegada),
+      hora: cita.hora || '',
+      tipoDeConsulta: cita.tipoDeConsulta || '',
+      x: Boolean(cita.x),
+      examen: cita.examen || '',
+      qr: Boolean(cita.qr),
+      personaQueTomoLaCita: cita.personaQueTomoLaCita || '',
+      confirmacion: cita.confirmacion || '',
+      fechaEnQueSeTomoLaCita: (cita.fechaEnQueSeTomoLaCita || '').slice(0, 10),
+      plan: cita.plan || '',
+      rx: cita.rx || '',
+      activa: estaActiva(cita),
+    };
+  });
   const [error, setError] = useState('');
   const [lookupAbierto, setLookupAbierto] = useState(false);
+  const [datosAbiertos, setDatosAbiertos] = useState(false);
 
   const paciente = form.idPaciente ? obtenerPaciente(form.idPaciente) : null;
 
@@ -101,7 +127,6 @@ export default function FormularioCita({ modo, cita, fechaPrincipal, onGuardado,
       ...previo,
       idPaciente: seleccionado.idPaciente,
       statusIdPaciente: seleccionado.statusIdPaciente || '',
-      telefono: seleccionado.telefono || '',
     }));
     setLookupAbierto(false);
     setError('');
@@ -118,9 +143,11 @@ export default function FormularioCita({ modo, cita, fechaPrincipal, onGuardado,
       return;
     }
 
+    // El estado elegido en la cita se guarda en el registro oficial del paciente.
+    actualizarPaciente(paciente.idPaciente, { statusIdPaciente: form.statusIdPaciente });
+
     const registro = {
       idPaciente: paciente.idPaciente,
-      statusIdPaciente: form.statusIdPaciente,
       // La fecha de llegada siempre la define el calendario principal; solo cambia la hora.
       llegada: combinarFechaHora(fechaPrincipal, form.llegadaHora || '00:00'),
       hora: form.hora,
@@ -130,10 +157,10 @@ export default function FormularioCita({ modo, cita, fechaPrincipal, onGuardado,
       qr: form.qr,
       personaQueTomoLaCita: form.personaQueTomoLaCita,
       confirmacion: form.confirmacion,
-      telefono: form.telefono,
       fechaEnQueSeTomoLaCita: form.fechaEnQueSeTomoLaCita,
       plan: form.plan,
       rx: form.rx,
+      activa: form.activa,
     };
 
     if (esNueva) {
@@ -153,7 +180,11 @@ export default function FormularioCita({ modo, cita, fechaPrincipal, onGuardado,
   return (
     <>
       <form className="form-cita" onSubmit={guardar} noValidate>
-        {error && <div className="aviso aviso--error" role="alert">{error}</div>}
+        {error && (
+          <div className="aviso aviso--error" role="alert">
+            {error}
+          </div>
+        )}
 
         <section className="form-seccion">
           <div className="form-seccion-cabecera">
@@ -165,53 +196,57 @@ export default function FormularioCita({ modo, cita, fechaPrincipal, onGuardado,
             )}
           </div>
 
-          <div className="form-grid">
-            <Campo etiqueta="ID paciente">
-              <input className="entrada" readOnly value={paciente?.idPaciente ?? ''} placeholder="Sin paciente" />
-            </Campo>
-            <Campo etiqueta="N.º historial clínico">
-              <input className="entrada" readOnly value={paciente?.numeroDeHistorialClinico ?? ''} />
-            </Campo>
-            <Campo etiqueta="Nombres">
-              <input className="entrada" readOnly value={paciente?.nombres ?? ''} />
-            </Campo>
-            <Campo etiqueta="Apellido paterno">
-              <input className="entrada" readOnly value={paciente?.apellidoPaterno ?? ''} />
-            </Campo>
-            <Campo etiqueta="Apellido materno">
-              <input className="entrada" readOnly value={paciente?.apellidoMaterno ?? ''} />
-            </Campo>
-            <Campo etiqueta="Seguro médico">
-              <input
-                className="entrada"
-                readOnly
-                value={paciente ? paciente.seguro || 'No tiene seguro' : ''}
-              />
-            </Campo>
-            <Campo etiqueta="Estado del paciente">
-              <Seleccion valor={form.statusIdPaciente} onChange={cambiar('statusIdPaciente')} opciones={OPCIONES_STATUS_PACIENTE} />
-            </Campo>
-            <Campo etiqueta="Teléfono">
-              <input
-                className="entrada"
-                type="tel"
-                value={form.telefono}
-                onChange={(e) => cambiar('telefono')(e.target.value)}
-              />
-            </Campo>
-          </div>
+          {esNueva && !paciente && (
+            <p className="ayuda">Busque y seleccione un paciente para ver sus datos.</p>
+          )}
 
-          {paciente && !esNueva && (
-            <div className="form-enlace">
-              <Link className="btn btn--texto" to={`/DatosPersonales?idPaciente=${paciente.idPaciente}`}>
-                Ver datos personales de {apellidosPaternoPrimero(paciente)}
-              </Link>
-            </div>
+          {paciente && (
+            <>
+              <div className="form-grid">
+                <Campo etiqueta="ID paciente">
+                  <input className="entrada" readOnly value={paciente.idPaciente} />
+                </Campo>
+                <Campo etiqueta="N.º historial clínico">
+                  <input className="entrada" readOnly value={paciente.numeroDeHistorialClinico} />
+                </Campo>
+                <Campo etiqueta="Nombres">
+                  <input className="entrada" readOnly value={paciente.nombres} />
+                </Campo>
+                <Campo etiqueta="Apellido paterno">
+                  <input className="entrada" readOnly value={paciente.apellidoPaterno} />
+                </Campo>
+                <Campo etiqueta="Apellido materno">
+                  <input className="entrada" readOnly value={paciente.apellidoMaterno} />
+                </Campo>
+                <Campo etiqueta="Seguro médico">
+                  <input className="entrada" readOnly value={paciente.seguro || 'No tiene seguro'} />
+                </Campo>
+                <Campo etiqueta="Estado del paciente">
+                  <Seleccion
+                    valor={form.statusIdPaciente}
+                    onChange={cambiar('statusIdPaciente')}
+                    opciones={OPCIONES_STATUS_PACIENTE}
+                  />
+                </Campo>
+                <Campo etiqueta="Teléfono">
+                  <input className="entrada" readOnly value={paciente.telefono} />
+                </Campo>
+              </div>
+
+              <div className="form-enlace">
+                <button type="button" className="btn btn--texto" onClick={() => setDatosAbiertos(true)}>
+                  Ver datos personales de {apellidosPaternoPrimero(paciente)}
+                </button>
+              </div>
+            </>
           )}
         </section>
 
         <section className="form-seccion">
           <h3>Datos de la cita</h3>
+
+          <InterruptorActiva activa={form.activa} onChange={cambiar('activa')} />
+
           <div className="form-grid">
             <Campo etiqueta={`Llegada (fecha ${formatearFecha(fechaPrincipal)})`} ayuda="La fecha la define el calendario principal">
               <input
@@ -279,6 +314,12 @@ export default function FormularioCita({ modo, cita, fechaPrincipal, onGuardado,
 
       {lookupAbierto && (
         <LookupPacientes onSeleccionar={alSeleccionarPaciente} onCerrar={() => setLookupAbierto(false)} />
+      )}
+
+      {datosAbiertos && paciente && (
+        <Modal titulo="Datos personales" ancho="xl" onCerrar={() => setDatosAbiertos(false)}>
+          <PapelDatosPersonales valores={paciente} idPaciente={paciente.idPaciente} soloLectura />
+        </Modal>
       )}
     </>
   );

@@ -4,6 +4,8 @@ import { useAlmacen } from '../context/AlmacenContext.jsx';
 import Modal from '../components/Modal.jsx';
 import CalendarioPopover from '../components/CalendarioPopover.jsx';
 import FormularioCita from '../components/citas/FormularioCita.jsx';
+import { OPCIONES_ESTADO_CITAS } from '../data/opciones.js';
+import { estaActiva } from '../utils/citas.js';
 import {
   formatearFecha,
   formatearFechaHora,
@@ -18,7 +20,7 @@ const siNo = (valor) => (valor ? 'Sí' : 'No');
 // Los datos del paciente se obtienen por búsqueda (lookup) usando idPaciente.
 const COLUMNAS = [
   { etiqueta: 'ID paciente', valor: (c, p) => p?.idPaciente ?? c.idPaciente, clase: 'celda-numero' },
-  { etiqueta: 'Estado del paciente', valor: (c) => c.statusIdPaciente },
+  { etiqueta: 'Estado del paciente', valor: (c, p) => p?.statusIdPaciente },
   {
     etiqueta: 'Llegada',
     valor: (c) => formatearFechaHora(c.llegada),
@@ -37,25 +39,28 @@ const COLUMNAS = [
   { etiqueta: 'QR', valor: (c) => siNo(c.qr) },
   { etiqueta: 'Persona que tomó la cita', valor: (c) => c.personaQueTomoLaCita },
   { etiqueta: 'Confirmación', valor: (c) => c.confirmacion },
-  { etiqueta: 'Teléfono', valor: (c) => c.telefono, clase: 'celda-numero' },
+  { etiqueta: 'Teléfono', valor: (c, p) => p?.telefono, clase: 'celda-numero' },
   { etiqueta: 'Fecha en que se tomó la cita', valor: (c) => formatearFecha(c.fechaEnQueSeTomoLaCita) },
   { etiqueta: 'Plan', valor: (c) => c.plan },
   { etiqueta: 'Rx', valor: (c) => c.rx },
+  { etiqueta: 'Estado de citas', valor: (c) => (estaActiva(c) ? 'Activa' : 'Cancelada') },
 ];
 
 export default function Citas() {
   const { citas, obtenerPaciente } = useAlmacen();
   const [fechaPrincipal, setFechaPrincipal] = useState(hoyISO);
+  const [estadoCitas, setEstadoCitas] = useState('Activas');
   const [modal, setModal] = useState(null); // null | { tipo: 'nueva' } | { tipo: 'editar', cita }
   const [aviso, setAviso] = useState('');
 
-  // Se muestran las citas cuya fecha de "Hora" coincide con el calendario principal.
+  // Citas cuya fecha de "Hora" coincide con el calendario principal y que cumplen el "Estado de citas".
   const citasDelDia = useMemo(
     () =>
       citas
         .filter((c) => parteFecha(c.hora) === fechaPrincipal)
+        .filter((c) => estadoCitas === 'Todas' || (estadoCitas === 'Activas') === estaActiva(c))
         .sort((a, b) => a.hora.localeCompare(b.hora)),
-    [citas, fechaPrincipal],
+    [citas, fechaPrincipal, estadoCitas],
   );
 
   function cambiarFecha(nuevaFecha) {
@@ -92,6 +97,16 @@ export default function Citas() {
             onChange={cambiarFecha}
             alineacion="derecha"
           />
+          <label className="campo campo--estado">
+            <span className="campo-etiqueta">Estado de citas</span>
+            <select className="entrada" value={estadoCitas} onChange={(e) => setEstadoCitas(e.target.value)}>
+              {OPCIONES_ESTADO_CITAS.map((op) => (
+                <option key={op} value={op}>
+                  {op}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
       </header>
 
@@ -121,7 +136,9 @@ export default function Citas() {
             <tbody>
               {citasDelDia.length === 0 && (
                 <tr className="fila--vacia">
-                  <td colSpan={COLUMNAS.length}>No hay citas para esta fecha. Use «+ Nueva cita» para registrar una.</td>
+                  <td colSpan={COLUMNAS.length}>
+                    No hay citas para esta fecha y estado seleccionados. Use «+ Nueva cita» para registrar una.
+                  </td>
                 </tr>
               )}
               {citasDelDia.map((cita) => {

@@ -157,21 +157,97 @@
   max-height: 52vh;
 }
 
+/* Desplegables en blanco: el menú de cada select se ve igual en modo claro y oscuro del sistema. */
+
+/* Se escribe con :read-only porque los select también cuentan como de solo lectura y, si no, toman el fondo gris de .entrada. */
+select.entrada,
+select.entrada:read-only {
+  background-color: #ffffff;
+  color-scheme: light;
+}
+
+.campo--estado {
+  min-width: 190px;
+}
+
+/* Interruptor "Activa" / "Cancelada" de la cita */
+
+.interruptor-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+}
+
+.interruptor {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 2px;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.interruptor-pista {
+  position: relative;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: #cbd5e1;
+  transition: background 0.2s ease;
+}
+
+.interruptor-bola {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.interruptor--on {
+  color: var(--primario-oscuro);
+}
+
+.interruptor--on .interruptor-pista {
+  background: var(--acento);
+}
+
+.interruptor--on .interruptor-bola {
+  transform: translateX(20px);
+}
+
+.interruptor-texto {
+  min-width: 84px;
+  text-align: left;
+}
+
 /* ---------- Historial: paneles ---------- */
 
 .historial-layout {
   display: grid;
   grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
   gap: 22px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .historial-izquierda {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  position: sticky;
-  top: 20px;
+  min-width: 0;
 }
 
 .historial-derecha {
@@ -446,6 +522,24 @@
 
 .filtros-cabecera h3 {
   font-size: 16px;
+  color: #ffffff;
+}
+
+.filtros-cabecera .insignia {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Tarjeta "Registros del historial" completa en verde oscuro. */
+.filtros-historial {
+  background: linear-gradient(180deg, #0b3b4a 0%, #0e4f63 100%);
+  border-color: #0e4f63;
+  color: #ffffff;
+}
+
+.filtros-historial .campo-etiqueta,
+.filtros-historial .cal-etiqueta {
+  color: #ffffff;
 }
 
 .filtros-grid {
@@ -531,8 +625,14 @@
   min-width: 0;
 }
 
-.registro-dato--area {
+.registro-dato--area,
+.registro-dato--valor {
   grid-column: 1 / -1;
+}
+
+.registro-dato--valor dd {
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .registro-dato dt {
@@ -584,6 +684,49 @@
 
 .registro-archivos small {
   color: var(--texto-tenue);
+}
+
+/* Historial en escritorio: la pantalla no se desplaza; cada panel tiene su propio scroll
+   y el encabezado de la página queda fijo. En pantallas angostas los paneles se apilan. */
+
+@media (min-width: 1101px) {
+  .contenido--fijo {
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pagina--historial {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-width: none;
+    width: 100%;
+  }
+
+  .pagina--historial .historial-layout {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .pagina--historial .historial-izquierda,
+  .pagina--historial .historial-derecha {
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  /* Las tarjetas no se encogen: si no caben, el panel completo se desplaza. */
+  .pagina--historial .historial-izquierda > *,
+  .pagina--historial .historial-derecha > * {
+    flex-shrink: 0;
+  }
+
+  .pagina--historial .filtros-historial {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
 }
 
 @media (max-width: 1100px) {

@@ -37,6 +37,8 @@ export const OPCIONES_TIPO_CONSULTA = [
 
 export const OPCIONES_CONFIRMACION = ['Pendiente', 'Confirmada', 'No confirmada'];
 
+export const OPCIONES_ESTADO_CITAS = ['Activas', 'Canceladas', 'Todas'];
+
 export const TIPO_REGISTRO_ESTADO = 'estado';
 export const TIPO_REGISTRO_FACTURACION = 'facturacion';
 

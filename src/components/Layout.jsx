@@ -19,6 +19,8 @@ export default function Layout() {
   const navigate = useNavigate();
   const { usuario, cerrarSesion } = useAutenticacion();
   const esInicio = pathname === '/' || pathname === '';
+  // Historial usa paneles con scroll propio, así que la página no debe desplazarse.
+  const esHistorial = pathname.toLowerCase() === '/historial';
 
   function salir() {
     cerrarSesion();
@@ -70,7 +72,7 @@ export default function Layout() {
         </div>
       </aside>
 
-      <main className={`contenido ${esInicio ? 'contenido--inicio' : ''}`}>
+      <main className={`contenido ${esInicio ? 'contenido--inicio' : ''} ${esHistorial ? 'contenido--fijo' : ''}`}>
         <Outlet />
       </main>
     </div>

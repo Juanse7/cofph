@@ -16,6 +16,25 @@ export function ahoraDateTimeISO() {
   return `${fechaDesdeDate(d)}T${dosDigitos(d.getHours())}:${dosDigitos(d.getMinutes())}`;
 }
 
+// Fecha y hora actual con segundos (YYYY-MM-DDTHH:mm:ss). Se usa para registros que se guardan al momento.
+export function ahoraDateTimeConSegundosISO() {
+  const d = new Date();
+  return `${fechaDesdeDate(d)}T${dosDigitos(d.getHours())}:${dosDigitos(d.getMinutes())}:${dosDigitos(d.getSeconds())}`;
+}
+
+// Completa una fecha y hora sin segundos con ":00", para compararla con las que sí los tienen.
+export function normalizarFechaHora(valor) {
+  if (!valor) return '';
+  return valor.length === 16 ? `${valor}:00` : valor;
+}
+
+// Como formatearFechaHora, pero muestra también los segundos cuando el valor los tiene.
+export function formatearFechaHoraCompleta(iso) {
+  if (!iso) return '';
+  const base = formatearFechaHora(iso);
+  return iso.length >= 19 ? `${base}:${iso.slice(17, 19)}` : base;
+}
+
 export function parteFecha(valor) {
   return valor ? valor.slice(0, 10) : '';
 }

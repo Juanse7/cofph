@@ -115,7 +115,8 @@ export function AlmacenProvider({ children }) {
 
   // ---------- Historial ----------
   const agregarRegistroHistorial = useCallback((registro) => {
-    const nuevo = { ...registro, id: nuevoId('H') };
+    // creadoEn marca el momento exacto en que se guardó, para ordenar registros del mismo minuto.
+    const nuevo = { ...registro, id: nuevoId('H'), creadoEn: new Date().toISOString() };
     setDatos((previo) => ({ ...previo, historial: [...previo.historial, nuevo] }));
   }, []);
 

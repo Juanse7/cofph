@@ -1,5 +1,5 @@
 import { DEFINICION_REGISTRO } from '../../data/historialRegistros.js';
-import { formatearFechaHora } from '../../utils/fechas.js';
+import { formatearFechaHora, formatearFechaHoraCompleta } from '../../utils/fechas.js';
 
 function formatearTamano(bytes) {
   if (!bytes && bytes !== 0) return '';
@@ -18,7 +18,7 @@ export default function RegistroDiv({ registro }) {
       <header className="registro-cabecera">
         <span className="registro-tipo">{definicion.titulo}</span>
         <time className="registro-fecha" dateTime={registro.fechaHora}>
-          {formatearFechaHora(registro.fechaHora)}
+          {formatearFechaHoraCompleta(registro.fechaHora)}
         </time>
       </header>
 
@@ -28,7 +28,6 @@ export default function RegistroDiv({ registro }) {
           if (campo.imagen) {
             return (
               <div key={campo.clave} className="registro-dato registro-dato--area">
-                <dt>{campo.etiqueta}</dt>
                 <dd>
                   {valor ? (
                     <img className="registro-imagen" src={valor} alt={campo.etiqueta} />
@@ -36,6 +35,14 @@ export default function RegistroDiv({ registro }) {
                     <span className="celda-tenue">Sin contenido</span>
                   )}
                 </dd>
+              </div>
+            );
+          }
+          // Campos que solo muestran su valor: el título del registro ya indica qué es.
+          if (campo.soloValor) {
+            return (
+              <div key={campo.clave} className="registro-dato registro-dato--valor">
+                <dd>{valor || <span className="celda-tenue">—</span>}</dd>
               </div>
             );
           }

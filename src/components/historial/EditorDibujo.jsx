@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAlmacen } from '../../context/AlmacenContext.jsx';
 import { TIPO_DIBUJO } from '../../data/historialRegistros.js';
-import { ahoraDateTimeISO } from '../../utils/fechas.js';
+import { ahoraDateTimeConSegundosISO } from '../../utils/fechas.js';
 
 const ANCHO_LIENZO = 800;
 const ALTO_LIENZO = 440;
@@ -163,7 +163,7 @@ export default function EditorDibujo({ idPaciente, onGuardado }) {
     agregarRegistroHistorial({
       idPaciente,
       tipo: TIPO_DIBUJO,
-      fechaHora: ahoraDateTimeISO(),
+      fechaHora: ahoraDateTimeConSegundosISO(),
       datos: { imagen },
       archivos: [],
     });

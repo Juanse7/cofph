@@ -9,7 +9,7 @@ export const TIPO_DIBUJO = 'dibujo';
 export const DEFINICION_REGISTRO = {
   estado: {
     titulo: 'Estado del paciente',
-    campos: [{ clave: 'estado', etiqueta: 'Estado del paciente' }],
+    campos: [{ clave: 'estado', etiqueta: 'Estado del paciente', soloValor: true }],
   },
   facturacion: {
     titulo: 'Apartado de facturación',

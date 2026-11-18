@@ -4,7 +4,7 @@ import { CampoLinea, AreaLinea } from '../CampoLinea.jsx';
 import { OPCIONES_STATUS_PACIENTE } from '../../data/opciones.js';
 import { ETIQUETAS_DATOS_PERSONALES } from '../../data/etiquetas.js';
 import { TIPO_ESTADO, TIPO_FACTURACION } from '../../data/historialRegistros.js';
-import { ahoraDateTimeISO } from '../../utils/fechas.js';
+import { ahoraDateTimeConSegundosISO } from '../../utils/fechas.js';
 
 function Tarjeta({ id, titulo, children }) {
   return (
@@ -61,7 +61,7 @@ export function TarjetaEstado({ paciente }) {
     agregarRegistroHistorial({
       idPaciente: paciente.idPaciente,
       tipo: TIPO_ESTADO,
-      fechaHora: ahoraDateTimeISO(),
+      fechaHora: ahoraDateTimeConSegundosISO(),
       datos: { estado },
       archivos: [],
     });
@@ -116,7 +116,7 @@ export function TarjetaFacturacion({ paciente }) {
     agregarRegistroHistorial({
       idPaciente: paciente.idPaciente,
       tipo: TIPO_FACTURACION,
-      fechaHora: ahoraDateTimeISO(),
+      fechaHora: ahoraDateTimeConSegundosISO(),
       datos: { ...datos },
       archivos: [],
     });
